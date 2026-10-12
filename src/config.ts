@@ -20,6 +20,10 @@ const config: ResolvedAstroPaperConfig = {
     googleVerification:
       userConfig.site.googleVerification || PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
+  home: {
+    ...userConfig.home,
+    featuredProjects: userConfig.home.featuredProjects ?? 4,
+  },
   posts: {
     perPage: userConfig.posts?.perPage ?? 4,
     perIndex: userConfig.posts?.perIndex ?? 4,
@@ -29,10 +33,17 @@ const config: ResolvedAstroPaperConfig = {
   features: {
     lightAndDarkMode: userConfig.features?.lightAndDarkMode ?? true,
     dynamicOgImage: userConfig.features?.dynamicOgImage ?? true,
-    showArchives: userConfig.features?.showArchives ?? true,
     showBackButton: userConfig.features?.showBackButton ?? true,
     editPost: userConfig.features?.editPost ?? { enabled: false },
     search: userConfig.features?.search ?? "pagefind",
+  },
+  analytics: {
+    cloudflare: {
+      enabled:
+        (userConfig.analytics?.cloudflare?.enabled ?? false) &&
+        Boolean(userConfig.analytics?.cloudflare?.token),
+      token: userConfig.analytics?.cloudflare?.token ?? "",
+    },
   },
   socials: userConfig.socials ?? [],
   shareLinks: userConfig.shareLinks ?? [],

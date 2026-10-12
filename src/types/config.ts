@@ -21,6 +21,23 @@ interface SiteConfig {
   googleVerification?: string;
 }
 
+interface HomeConfig {
+  /** One-line headline shown as the home page <h1> */
+  headline: string;
+  /** 2–3 sentence intro shown under the headline */
+  intro: string;
+  /** Max featured projects on the home page. Defaults to 4. */
+  featuredProjects?: number;
+}
+
+interface AnalyticsConfig {
+  /**
+   * Cloudflare Web Analytics (cookieless). The beacon script and the CSP
+   * allowances for it are only emitted when `enabled` is true and `token` is set.
+   */
+  cloudflare?: { enabled: boolean; token: string };
+}
+
 interface PostsConfig {
   /** Posts per page on paginated listing pages */
   perPage?: number;
@@ -42,8 +59,6 @@ interface FeaturesConfig {
    * for the default layout OG image (build fails if missing).
    */
   dynamicOgImage?: boolean;
-  /** Show the /archives page and link it in nav. Defaults to true. */
-  showArchives?: boolean;
   /** Show back button on post detail pages. Defaults to true. */
   showBackButton?: boolean;
   /** "Edit page" link shown on post detail pages. */
@@ -94,8 +109,10 @@ interface ShareLink {
 
 interface AstroPaperConfig {
   site: SiteConfig;
+  home: HomeConfig;
   posts?: PostsConfig;
   features?: FeaturesConfig;
+  analytics?: AnalyticsConfig;
   /** Social profile links shown in header/footer */
   socials?: SocialLink[];
   /** Share links shown on post detail pages */
@@ -119,8 +136,10 @@ type ResolvedSiteConfig = Required<
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;
+  home: Required<HomeConfig>;
   posts: Required<PostsConfig>;
   features: Required<FeaturesConfig>;
+  analytics: { cloudflare: { enabled: boolean; token: string } };
   socials: SocialLink[];
   shareLinks: ShareLink[];
 }
