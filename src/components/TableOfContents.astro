@@ -1,0 +1,35 @@
+---
+import type { MarkdownHeading } from "astro";
+
+type Props = {
+  headings: MarkdownHeading[];
+  /** Only render when the post has at least this many h2/h3 headings. */
+  minHeadings?: number;
+};
+
+const { headings, minHeadings = 3 } = Astro.props;
+
+const items = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length >= minHeadings && (
+    <details open class="border-border mt-8 rounded border px-4 py-3">
+      <summary class="cursor-pointer font-semibold">Table of contents</summary>
+      <nav aria-label="Table of contents">
+        <ol class="mt-2 space-y-1">
+          {items.map(({ depth, slug, text }) => (
+            <li class:list={{ "ms-4": depth === 3 }}>
+              <a
+                href={`#${slug}`}
+                class="hover:text-accent decoration-dashed underline-offset-4 hover:underline"
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  )
+}

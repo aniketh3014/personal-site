@@ -1,10 +1,13 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
 import PostLayout from "@/layouts/PostLayout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Datetime from "@/components/Datetime.astro";
 import Tag from "@/components/Tag.astro";
+import TableOfContents from "@/components/TableOfContents.astro";
+import { getReadingTime } from "@/utils/getReadingTime";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
@@ -71,9 +74,12 @@ const {
   timezone,
   tags,
   hideEditPost,
+  cover,
+  cover_alt,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const readingTime = getReadingTime(post.body);
 
 let ogImageUrl: string | undefined;
 
@@ -122,6 +128,10 @@ const ogImage = ogImageUrl
 
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <span aria-hidden="true" class="text-muted-foreground">·</span>
+      <span class="text-muted-foreground text-sm sm:text-base">
+        {readingTime} min read
+      </span>
       <span
         aria-hidden="true"
         class:list={[
@@ -133,6 +143,20 @@ const ogImage = ogImageUrl
       </span>
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
+
+    {
+      cover && (
+        <Image
+          src={cover}
+          alt={cover_alt ?? ""}
+          class="mt-6 w-full rounded"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <TableOfContents {headings} />
 
     <article
       id="article"

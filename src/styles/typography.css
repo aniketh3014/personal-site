@@ -136,3 +136,9 @@
     }
   }
 }
+
+/* Build-time Mermaid diagrams are light-themed SVG images; give them a light
+   backdrop so they stay readable in dark mode. */
+.app-prose img[id^="mermaid-"] {
+  @apply rounded bg-white p-3;
+}

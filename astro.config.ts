@@ -8,9 +8,8 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { unified } from "@astrojs/markdown-remark";
-import remarkToc from "remark-toc";
-import remarkCollapse from "remark-collapse";
 import rehypeCallouts from "rehype-callouts";
+import rehypeMermaid from "rehype-mermaid";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -21,10 +20,7 @@ import config from "./astro-paper.config";
 
 export default defineConfig({
   site: config.site.url,
-  integrations: [
-    mdx(),
-    sitemap(),
-  ],
+  integrations: [mdx(), sitemap()],
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
@@ -34,12 +30,21 @@ export default defineConfig({
   },
   markdown: {
     processor: unified({
-      remarkPlugins: [
-        remarkToc,
-        [remarkCollapse, { test: "Table of contents" }],
+      rehypePlugins: [
+        rehypeCallouts,
+        // Mermaid is rendered to SVG at build time (headless Chromium via
+        // Playwright), so no Mermaid JS ships to readers.
+        [
+          rehypeMermaid,
+          {
+            strategy: "img-svg",
+            mermaidConfig: { theme: "neutral" },
+            launchOptions: { channel: "chromium" },
+          },
+        ],
       ],
-      rehypePlugins: [rehypeCallouts],
     }),
+    syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid", "math"] },
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },
       defaultColor: false,

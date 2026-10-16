@@ -7,21 +7,33 @@ export const BLOG_PATH = "src/content/posts";
 
 const posts = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${BLOG_PATH}` }),
+  // Authoring frontmatter (see README) is mapped onto the field names the
+  // theme components use, so theme code stays close to upstream.
   schema: ({ image }) =>
-    z.object({
-      author: z.string().default(config.site.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
-      title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      hideEditPost: z.boolean().optional(),
-      timezone: z.string().optional(),
-    }),
+    z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        date: z.coerce.date(),
+        updated: z.coerce.date().optional(),
+        tags: z.array(z.string()).default(["others"]),
+        draft: z.boolean().default(false),
+        cover: image().optional(),
+        cover_alt: z.string().optional(),
+        canonical_url: z.url().optional(),
+        featured: z.boolean().optional(),
+        author: z.string().default(config.site.author),
+        timezone: z.string().optional(),
+      })
+      .transform(({ date, updated, cover, canonical_url, ...rest }) => ({
+        ...rest,
+        cover,
+        pubDatetime: date,
+        modDatetime: updated ?? null,
+        ogImage: cover,
+        canonicalURL: canonical_url,
+        hideEditPost: true,
+      })),
 });
 
 const pages = defineCollection({
