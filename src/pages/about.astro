@@ -5,6 +5,7 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import PersonJsonLd from "@/components/PersonJsonLd.astro";
 import Experience from "@/components/Experience.astro";
 import TechList from "@/components/TechList.astro";
 import config from "@/config";
@@ -26,6 +27,7 @@ const { Content } = await render(about);
   ogImage={about.data.ogImage}
   canonicalURL={about.data.canonicalURL}
 >
+  <PersonJsonLd slot="head" />
   <Header />
 
   <Breadcrumb />

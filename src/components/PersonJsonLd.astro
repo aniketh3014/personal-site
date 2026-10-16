@@ -1,0 +1,21 @@
+---
+import config from "@/config";
+
+const { site, home, socials } = config;
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.author,
+  url: site.url,
+  jobTitle: "Backend Engineer",
+  description: home.headline,
+  sameAs: socials.map(({ url }) => url).filter(url => url.startsWith("http")),
+};
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(person)}
+/>

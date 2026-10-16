@@ -9,18 +9,35 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  /** Post title without the site-name suffix used in <title>. */
+  headline?: string;
+  tags?: string[];
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  headline,
+  tags,
+} = Astro.props;
+
+const pageURL = canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: title ?? site.title,
+  headline: headline ?? title ?? site.title,
+  ...(description && { description }),
   image: ogImage,
+  url: pageURL,
+  mainEntityOfPage: { "@type": "WebPage", "@id": pageURL },
+  ...(tags?.length && { keywords: tags.join(", ") }),
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
   author: [
