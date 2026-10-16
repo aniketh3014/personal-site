@@ -7,6 +7,8 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { getProjects } from "@/utils/getProjects";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
@@ -19,8 +21,10 @@ const t = useTranslations(locale);
 
 const posts = await getCollection("posts");
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const recentPosts = sortedPosts.slice(0, postsConfig.perIndex);
+const featuredProjects = (await getProjects())
+  .filter(({ data }) => data.featured)
+  .slice(0, home.featuredProjects);
 const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
@@ -50,22 +54,23 @@ const homePath = getRelativeLocaleUrl(locale, "");
     </section>
 
     {
-      featuredPosts.length > 0 && (
+      featuredProjects.length > 0 && (
         <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
+          id="featured-projects"
+          class="border-border border-b pt-12 pb-6"
         >
           <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
+            Featured projects
           </h2>
           <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
+            {featuredProjects.map(project => (
+              <ProjectCard variant="h3" {...project} />
             ))}
           </ul>
+          <LinkButton href={getRelativeLocaleUrl(locale, "projects")}>
+            All projects
+            <IconArrowRight class="inline-block rtl:-rotate-180" />
+          </LinkButton>
         </section>
       )
     }
@@ -77,7 +82,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
             {t.home.recentPosts}
           </h2>
           <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
+            {recentPosts.map(data => (
               <Card variant="h3" {...data} />
             ))}
           </ul>

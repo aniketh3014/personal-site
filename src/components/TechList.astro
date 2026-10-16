@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import StackList from "./StackList.astro";
+
+const groups = (await getCollection("tech")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<dl class="not-prose space-y-4">
+  {
+    groups.map(({ data }) => (
+      <div>
+        <dt class="font-semibold">{data.group}</dt>
+        <dd class="mt-1">
+          <StackList items={data.items} label={data.group} />
+        </dd>
+      </div>
+    ))
+  }
+</dl>

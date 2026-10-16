@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import dayjs from "dayjs";
+
+const entries = await getCollection("experience");
+// Newest first, by start date.
+entries.sort((a, b) => b.data.start.localeCompare(a.data.start));
+
+const fmt = (ym: string) => dayjs(`${ym}-01`).format("MMM YYYY");
+---
+
+<ol class="not-prose space-y-8">
+  {
+    entries.map(({ data }) => (
+      <li>
+        <h3 class="text-lg font-semibold">
+          {data.role} ·{" "}
+          {data.company_url ? (
+            <a href={data.company_url} class="hover:text-accent underline">
+              {data.company}
+            </a>
+          ) : (
+            data.company
+          )}
+        </h3>
+        <p class="text-muted-foreground text-sm">
+          {fmt(data.start)} – {data.end ? fmt(data.end) : "Present"}
+          {data.location && ` · ${data.location}`}
+        </p>
+        <ul class="marker:text-accent mt-2 list-disc space-y-1 ps-5">
+          {data.highlights.map(item => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </li>
+    ))
+  }
+</ol>

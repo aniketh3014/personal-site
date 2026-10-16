@@ -87,6 +87,7 @@ const tech = defineCollection({
   loader: file("src/data/tech.yaml"),
   schema: z.object({
     group: z.string(),
+    order: z.number().default(100),
     items: z.array(z.string()).min(1),
   }),
 });

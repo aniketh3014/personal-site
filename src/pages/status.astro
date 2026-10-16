@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+/*
+ * Placeholder. To wire this up later, either:
+ * - link to a hosted status page (e.g. an uptime monitor's public page), or
+ * - embed a public Grafana dashboard in an <iframe>. The CSP blocks frames by
+ *   default: add its origin to `frameSrc` in src/integrations/securityHeaders.ts.
+ */
+---
+
+<Layout
+  title={`Status | ${config.site.title}`}
+  description="Uptime and health of this site and the services I run."
+>
+  <Header />
+  <Breadcrumb />
+  <Main pageTitle="Status" class="app-prose">
+    <p>
+      This page will show uptime and health for this site and the services I
+      run. Monitoring isn't wired up yet.
+    </p>
+  </Main>
+  <Footer />
+</Layout>

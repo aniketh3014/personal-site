@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+// Replace public/resume.pdf to update the download.
+const pdf = "/resume.pdf";
+---
+
+<Layout
+  title={`Resume | ${config.site.title}`}
+  description={`Resume of ${config.site.author}.`}
+>
+  <Header />
+  <Breadcrumb />
+  <Main pageTitle="Resume" class="app-prose">
+    <p>
+      <a href={pdf} download="Aniket-Ghosh-Resume.pdf"
+        >Download my resume (PDF)</a
+      >
+    </p>
+    <p>
+      The short version: see <a href="/about/#experience">experience</a> and
+      <a href="/projects/">projects</a>.
+    </p>
+  </Main>
+  <Footer />
+</Layout>
