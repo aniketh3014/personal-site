@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import StackList from "./StackList.astro";
+
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"projects">;
+
+const { variant: Heading = "h2", id, data } = Astro.props;
+---
+
+<li class="my-6">
+  <a
+    href={getRelativeLocaleUrl(Astro.currentLocale ?? "en", `projects/${id}/`)}
+    class="text-accent inline-block text-lg font-medium decoration-dashed underline-offset-4 hover:underline focus-visible:no-underline"
+  >
+    <Heading>{data.title}</Heading>
+  </a>
+  <p class="mt-1">{data.summary}</p>
+  <div class="mt-2">
+    <StackList items={data.stack} />
+  </div>
+</li>

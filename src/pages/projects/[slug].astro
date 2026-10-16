@@ -1,0 +1,83 @@
+---
+import { type CollectionEntry, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import StackList from "@/components/StackList.astro";
+import { getProjects } from "@/utils/getProjects";
+import config from "@/config";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+type Props = { project: CollectionEntry<"projects"> };
+
+const { project } = Astro.props;
+const { title, summary, problem, stack, role, results } = project.data;
+const { repo_url, demo_url, writeup_url } = project.data;
+const { Content } = await render(project);
+
+const links = [
+  { label: "Write-up", href: writeup_url },
+  { label: "Source code", href: repo_url },
+  { label: "Live demo", href: demo_url },
+].filter((link): link is { label: string; href: string } => !!link.href);
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={summary}>
+  <Header />
+  <Breadcrumb />
+  <main id="main-content" class="app-layout pb-4">
+    <h1 class="text-accent text-2xl font-bold sm:text-3xl">{title}</h1>
+    <p class="mt-2 italic">{summary}</p>
+
+    <dl class="mt-4 grid gap-x-4 gap-y-2 sm:grid-cols-[auto_1fr]">
+      <dt class="font-semibold">Role</dt>
+      <dd>{role}</dd>
+      <dt class="font-semibold">Stack</dt>
+      <dd><StackList items={stack} /></dd>
+    </dl>
+
+    <article id="article" class="app-prose max-w-app mt-8 w-full">
+      <h2 id="problem">Problem</h2>
+      <p>{problem}</p>
+
+      <Content />
+
+      {
+        results.length > 0 && (
+          <>
+            <h2 id="results">Results</h2>
+            <ul>
+              {results.map(result => (
+                <li>{result}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+
+      {
+        links.length > 0 && (
+          <>
+            <h2 id="links">Links</h2>
+            <ul>
+              {links.map(({ label, href }) => (
+                <li>
+                  <a href={href}>{label}</a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </article>
+  </main>
+  <Footer />
+</Layout>

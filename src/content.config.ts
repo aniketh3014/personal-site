@@ -1,6 +1,6 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import config from "@/config";
 
 export const BLOG_PATH = "src/content/posts";
@@ -46,4 +46,49 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { posts, pages };
+// Body Markdown holds the "Architecture" and "Key decisions" sections; the
+// detail page renders problem → body → results → links around it.
+const projects = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: "./src/content/projects",
+  }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    problem: z.string(),
+    stack: z.array(z.string()),
+    role: z.string(),
+    results: z.array(z.string()).default([]),
+    repo_url: z.url().optional(),
+    demo_url: z.url().optional(),
+    // A blog post on this site ("/blog/slug/") or an external URL.
+    writeup_url: z.string().optional(),
+    featured: z.boolean().default(false),
+    order: z.number().default(100),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const experience = defineCollection({
+  loader: file("src/data/experience.yaml"),
+  schema: z.object({
+    role: z.string(),
+    company: z.string(),
+    company_url: z.url().optional(),
+    location: z.string().optional(),
+    start: z.string(), // e.g. "2023-04"
+    end: z.string().optional(), // omit while current
+    highlights: z.array(z.string()).min(1).max(4),
+  }),
+});
+
+const tech = defineCollection({
+  loader: file("src/data/tech.yaml"),
+  schema: z.object({
+    group: z.string(),
+    items: z.array(z.string()).min(1),
+  }),
+});
+
+export const collections = { posts, pages, projects, experience, tech };

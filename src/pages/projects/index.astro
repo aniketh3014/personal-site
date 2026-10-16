@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { getProjects } from "@/utils/getProjects";
+import config from "@/config";
+
+const projects = await getProjects();
+---
+
+<Layout
+  title={`Projects | ${config.site.title}`}
+  description="Things I've designed and built: the problem, the architecture, the trade-offs and the results."
+>
+  <Header />
+  <Breadcrumb />
+  <Main
+    pageTitle="Projects"
+    pageDesc="The problem, the architecture, the trade-offs and the results."
+  >
+    <ul>
+      {projects.map(project => <ProjectCard {...project} />)}
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

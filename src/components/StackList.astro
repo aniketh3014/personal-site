@@ -1,0 +1,13 @@
+---
+type Props = { items: string[]; label?: string };
+
+const { items, label = "Tech stack" } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-2" aria-label={label}>
+  {
+    items.map(item => (
+      <li class="border-border rounded border px-2 py-0.5 text-sm">{item}</li>
+    ))
+  }
+</ul>

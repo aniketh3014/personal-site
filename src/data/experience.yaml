@@ -1,0 +1,22 @@
+# PLACEHOLDER entries: replace with your real experience.
+# Newest first. `end` is omitted for your current role.
+# Dates are "YYYY-MM". Keep 2–3 impact-focused highlights per role.
+- id: company-b
+  role: Backend Engineer
+  company: "Placeholder Company B"
+  location: Remote
+  start: "2024-01"
+  highlights:
+    - "PLACEHOLDER: Cut p99 latency of the order service from 800 ms to 120 ms by moving hot reads to a write-through cache."
+    - "PLACEHOLDER: Led the migration of 12 services from EC2 to ECS Fargate with zero customer-visible downtime."
+    - "PLACEHOLDER: Introduced structured logging and SLO-based alerting, halving pages per on-call week."
+
+- id: company-a
+  role: Software Engineer
+  company: "Placeholder Company A"
+  location: "Bengaluru, India"
+  start: "2022-06"
+  end: "2023-12"
+  highlights:
+    - "PLACEHOLDER: Built an idempotent payment webhook processor in Go handling 2M events per day."
+    - "PLACEHOLDER: Wrote Terraform modules that made new environment setup a one-command task."
