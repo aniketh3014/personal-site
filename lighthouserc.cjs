@@ -11,7 +11,7 @@ module.exports = {
         "/blog/",
         "/blog/example-post/",
         "/projects/",
-        "/projects/sample-rate-limiter/",
+        "/projects/gstore/",
         "/about/",
       ],
       // 3 runs, asserted on the median: one cold-start run can't fail a PR.

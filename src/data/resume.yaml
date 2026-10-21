@@ -1,0 +1,32 @@
+# Resume-only content. Experience and skills come from experience.yaml and
+# tech.yaml. Build the PDF with `npm run resume` (see README).
+headline: "Backend Engineer · Go, distributed systems, AWS"
+location: "Berhampore, West Bengal, India"
+email: "ghoshaniket050@gmail.com"
+website: "https://aniketghosh.in"
+github: "https://github.com/aniketh3014"
+linkedin: "https://www.linkedin.com/in/aniket-ghosh-8b0b53281/"
+summary: >-
+  Backend engineer working in Go and TypeScript. Currently a Software Engineer
+  at Optraflow and Technical Lead at SkyBrance while completing a B.Tech in
+  Computer Science. I build APIs, schedulers and distributed systems, and run
+  them on AWS with Docker, Kubernetes and CI/CD.
+projects:
+  - name: gstore
+    tagline: "Peer-to-peer distributed file storage in Go"
+    url: "https://github.com/aniketh3014/gstore"
+    bullets:
+      - "Built a peer-to-peer file store in Go where every node is both client and server, with a pluggable TCP transport and handshake."
+      - "Implemented content-addressable storage, hashing keys with SHA-1 into sharded directory paths."
+      - "Replicated files by broadcasting gob-encoded messages and streaming data to all peers; nodes join the network by dialling bootstrap peers concurrently."
+  - name: PeerPair.dev
+    tagline: "Pair-programming rooms with live video"
+    url: "https://peerpair-dev.vercel.app"
+    bullets:
+      - "Built a Next.js and TypeScript app where developers create and join pair-programming rooms with live video."
+      - "Modelled users, OAuth accounts, sessions and rooms in PostgreSQL with Prisma; sign-in with Google and GitHub through NextAuth."
+      - "Integrated Stream's video SDK, issuing user tokens from server actions so API secrets never reach the browser."
+education:
+  degree: "B.Tech in Computer Science and Engineering"
+  school: "Siliguri Institute of Technology"
+  dates: "Jul 2023 – Jul 2027 (expected)"

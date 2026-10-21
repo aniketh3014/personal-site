@@ -14,7 +14,7 @@ export default defineAstroPaperConfig({
   home: {
     headline: "Backend engineer building reliable systems in Go.",
     intro:
-      "I build backend services in Go, mostly distributed systems on AWS, and I'm moving deeper into platform engineering and DevOps. This site is the canonical home for my technical write-ups.",
+      "I build backend services in Go and TypeScript: APIs, schedulers and distributed systems, deployed on AWS. I'm a Software Engineer at Optraflow and Technical Lead at SkyBrance, moving deeper into platform engineering and DevOps. This site is where my technical write-ups live.",
     featuredProjects: 4,
   },
   posts: {
@@ -39,6 +39,7 @@ export default defineAstroPaperConfig({
       name: "linkedin",
       url: "https://www.linkedin.com/in/aniket-ghosh-8b0b53281/",
     },
+    { name: "mail", url: "mailto:ghoshaniket050@gmail.com" },
   ],
   shareLinks: [
     { name: "x", url: "https://x.com/intent/post?url=" },

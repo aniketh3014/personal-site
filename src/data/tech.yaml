@@ -1,24 +1,19 @@
-# Grouped tech list shown on the About page, sorted by `order`.
-# No proficiency levels by design.
-# PLACEHOLDER: adjust the groups and items to what you actually use.
+# Grouped tech list shown on the About page and in the resume PDF, sorted by
+# `order`. No proficiency levels by design.
 # Quote any item that contains a comma, e.g. "AWS (EC2, S3)".
 - id: languages
-  group: Languages
+  group: Languages and frameworks
   order: 1
-  items: [Go, SQL, Bash, Python]
-- id: backend
-  group: Backend and data
-  order: 2
-  items: [gRPC, REST, PostgreSQL, Redis, Kafka]
+  items: [Go, TypeScript, JavaScript, Gin, Node.js, Next.js]
 - id: cloud
   group: Cloud
+  order: 2
+  items: ["AWS (EC2, S3, ECS, EKS, RDS)", Cloudflare]
+- id: data
+  group: Databases and ORMs
   order: 3
-  items: ["AWS (EC2, ECS, Lambda, S3, RDS, SQS)", Cloudflare]
-- id: platform
-  group: Platform and DevOps
+  items: [PostgreSQL, MongoDB, Prisma, Bun]
+- id: devops
+  group: DevOps and CI/CD
   order: 4
-  items: [Docker, Kubernetes, Terraform, GitHub Actions]
-- id: observability
-  group: Observability
-  order: 5
-  items: [Prometheus, Grafana, OpenTelemetry]
+  items: [Docker, Kubernetes, GitHub Actions]

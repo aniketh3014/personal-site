@@ -3,8 +3,11 @@ import { getCollection } from "astro:content";
 import dayjs from "dayjs";
 
 const entries = await getCollection("experience");
-// Newest first, by start date.
-entries.sort((a, b) => b.data.start.localeCompare(a.data.start));
+// Current roles first, then by end date; ties keep the file's order.
+// Same order as the resume PDF (scripts/build-resume.mjs).
+entries.sort((a, b) =>
+  (b.data.end ?? "9999-99").localeCompare(a.data.end ?? "9999-99")
+);
 
 const fmt = (ym: string) => dayjs(`${ym}-01`).format("MMM YYYY");
 ---
