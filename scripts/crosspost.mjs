@@ -45,7 +45,8 @@ const targets = {
 // ---- Read the post -------------------------------------------------------
 
 const path = resolve(file);
-if (extname(path) !== ".md") fail("only .md posts can be cross-posted (MDX has components)");
+if (extname(path) !== ".md")
+  fail("only .md posts can be cross-posted (MDX has components)");
 const rel = relative(POSTS_DIR, path);
 if (rel.startsWith("..")) fail(`post must live under ${POSTS_DIR}`);
 
@@ -69,7 +70,9 @@ const slug = rel
   .toLowerCase();
 
 const config = await readFile("astro-paper.config.ts", "utf8");
-const siteUrl = config.match(/url:\s*"(https?:\/\/[^"]+)"/)?.[1]?.replace(/\/$/, "");
+const siteUrl = config
+  .match(/url:\s*"(https?:\/\/[^"]+)"/)?.[1]
+  ?.replace(/\/$/, "");
 if (!siteUrl) fail("could not read site.url from astro-paper.config.ts");
 
 const postUrl = `${siteUrl}/blog/${slug}/`;
@@ -106,28 +109,37 @@ const devtoPayload = {
     published: false,
     canonical_url: canonical,
     // dev.to: at most 4 tags, lowercase alphanumeric only.
-    tags: tags.map(t => t.toLowerCase().replace(/[^a-z0-9]/g, "")).filter(Boolean).slice(0, 4),
+    tags: tags
+      .map(t => t.toLowerCase().replace(/[^a-z0-9]/g, ""))
+      .filter(Boolean)
+      .slice(0, 4),
     ...(coverUrl && { main_image: coverUrl }),
   },
 };
 
 const hashnodeInput = {
-  publicationId: process.env.HASHNODE_PUBLICATION_ID ?? "<HASHNODE_PUBLICATION_ID>",
+  publicationId:
+    process.env.HASHNODE_PUBLICATION_ID ?? "<HASHNODE_PUBLICATION_ID>",
   title: fm.title,
   subtitle: fm.description,
   contentMarkdown: body,
   originalArticleURL: canonical,
   tags: tags.map(name => ({
     name,
-    slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    slug: name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, ""),
   })),
   ...(coverUrl && { coverImageOptions: { coverImageURL: coverUrl } }),
 };
 
 if (dryRun) {
   console.log(`canonical: ${canonical}\n`);
-  if (targets.devto) console.log("dev.to payload:\n" + JSON.stringify(devtoPayload, null, 2));
-  if (targets.hashnode) console.log("\nHashnode input:\n" + JSON.stringify(hashnodeInput, null, 2));
+  if (targets.devto)
+    console.log("dev.to payload:\n" + JSON.stringify(devtoPayload, null, 2));
+  if (targets.hashnode)
+    console.log("\nHashnode input:\n" + JSON.stringify(hashnodeInput, null, 2));
   process.exit(0);
 }
 
@@ -144,7 +156,8 @@ async function devto() {
 
   // Skip if an article with this canonical URL already exists.
   const mine = await fetch(`${DEVTO_URL}/me/all?per_page=1000`, { headers });
-  if (!mine.ok) throw new Error(`dev.to list failed: ${mine.status} ${await mine.text()}`);
+  if (!mine.ok)
+    throw new Error(`dev.to list failed: ${mine.status} ${await mine.text()}`);
   const existing = (await mine.json()).find(a => a.canonical_url === canonical);
   if (existing) return `already exists, skipped: ${existing.url}`;
 

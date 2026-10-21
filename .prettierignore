@@ -5,6 +5,10 @@
 !/src
 !/public
 !/.github
+!/scripts
+!astro-paper.config.ts
+!lighthouserc.cjs
+!linkinator.config.json
 !tsconfig.json
 !astro.config.ts
 !package.json

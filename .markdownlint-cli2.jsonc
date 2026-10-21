@@ -1,0 +1,16 @@
+{
+  // Lints README and Markdown content. MDX is excluded (JSX trips the rules).
+  "globs": ["README.md", "src/content/**/*.md"],
+  "ignores": ["node_modules/**", "dist/**"],
+  "config": {
+    "default": true,
+    // Prose wraps however the author likes; Prettier owns formatting.
+    "MD013": false,
+    // HTML comments and the odd inline element are fine.
+    "MD033": false,
+    // Repeated sub-headings ("Go", "Results") under different parents are fine.
+    "MD024": { "siblings_only": true },
+    // gofmt'd Go uses tabs; only forbid them outside code.
+    "MD010": { "code_blocks": false },
+  },
+}

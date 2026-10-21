@@ -1,0 +1,17 @@
+{
+  "recurse": true,
+  "checkFragments": true,
+  "skip": [
+    "^mailto:",
+    "linkedin\\.com",
+    "^https://x\\.com/intent",
+    "^https://fonts\\.gstatic\\.com"
+  ],
+  "urlRewriteSearch": "^https://aniketghosh\\.in/",
+  "urlRewriteReplace": "/",
+  "retry": true,
+  "retryErrors": true,
+  "retryErrorsCount": 3,
+  "timeout": 20000,
+  "verbosity": "error"
+}

@@ -55,7 +55,8 @@ export default defineConfig({
     }),
     syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid", "math"] },
     shikiConfig: {
-      themes: { light: "min-light", dark: "night-owl" },
+      // Both themes keep comments above 4.5:1 contrast (Lighthouse a11y).
+      themes: { light: "github-light-default", dark: "github-dark-default" },
       defaultColor: false,
       wrap: false,
       transformers: [

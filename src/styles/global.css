@@ -37,3 +37,12 @@
 :target {
   scroll-margin-block: 1rem;
 }
+
+/* Darker light-mode callout colours so titles pass 4.5:1 contrast. */
+:root {
+  --callout-note-color-light: #0a58ca;
+  --callout-tip-color-light: #1a7f37;
+  --callout-important-color-light: #6639ba;
+  --callout-warning-color-light: #7d4e00;
+  --callout-caution-color-light: #b31d28;
+}

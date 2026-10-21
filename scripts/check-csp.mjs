@@ -38,7 +38,10 @@ const globalHeaders = headersFile
   .map(([k, v]) => [k, v.replace(/;\s*upgrade-insecure-requests/, "")]);
 
 const server = http.createServer(async (req, res) => {
-  let file = join(root, decodeURIComponent(new URL(req.url, "http://x").pathname));
+  let file = join(
+    root,
+    decodeURIComponent(new URL(req.url, "http://x").pathname)
+  );
   if (!file.startsWith(root)) return res.writeHead(403).end();
   try {
     if ((await stat(file)).isDirectory()) file = join(file, "index.html");
@@ -48,7 +51,10 @@ const server = http.createServer(async (req, res) => {
     res.statusCode = 404;
   }
   for (const [k, v] of globalHeaders) res.setHeader(k, v);
-  res.setHeader("Content-Type", types[extname(file)] ?? "application/octet-stream");
+  res.setHeader(
+    "Content-Type",
+    types[extname(file)] ?? "application/octet-stream"
+  );
   res.end(await readFile(file));
 });
 await new Promise(r => server.listen(0, "127.0.0.1", r));
@@ -66,7 +72,9 @@ const page = await browser.newPage();
 const problems = [];
 await page.addInitScript(() =>
   document.addEventListener("securitypolicyviolation", e =>
-    console.error(`CSP violation: ${e.violatedDirective} blocked ${e.blockedURI}`)
+    console.error(
+      `CSP violation: ${e.violatedDirective} blocked ${e.blockedURI}`
+    )
   )
 );
 page.on("console", m => {
@@ -95,4 +103,6 @@ if (problems.length) {
   console.error(`✗ ${problems.length} problem(s):\n` + problems.join("\n"));
   process.exit(1);
 }
-console.log(`✓ ${paths.length + 1} pages loaded with no CSP violations or JS errors`);
+console.log(
+  `✓ ${paths.length + 1} pages loaded with no CSP violations or JS errors`
+);
