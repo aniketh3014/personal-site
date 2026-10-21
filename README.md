@@ -3,7 +3,7 @@
 Source for [aniketghosh.in](https://aniketghosh.in): portfolio and blog of
 Aniket Ghosh. Built with [Astro](https://astro.build/) on the
 [AstroPaper](https://github.com/satnaing/astro-paper) theme, deployed to
-Cloudflare Pages.
+Cloudflare (Workers static assets).
 
 - [Local development](#local-development)
 - [Site configuration](#site-configuration)
@@ -63,7 +63,7 @@ analytics: {
 ```
 
 The beacon script and its CSP allowances are only emitted when both are set.
-Don't enable Cloudflare's automatic injection for the Pages project: that
+Don't enable Cloudflare's automatic injection for the site: that
 injected script isn't in the CSP and will be blocked.
 
 ## Adding a post
@@ -210,61 +210,63 @@ npm run crosspost -- src/content/posts/<slug>.md
 
 ## Deployment setup
 
-Deploys happen from GitHub Actions on every push to `main`, after all checks
-pass. Cloudflare doesn't build the site; it receives the checked `dist/`.
+The site is hosted as a **Cloudflare Workers static-assets** site, which
+Cloudflare now treats as the successor to Pages (new Pages projects are
+redirected to Workers). `wrangler.jsonc` describes it. Deploys happen from
+GitHub Actions on every push to `main`, after all checks pass: Cloudflare
+receives the checked `dist/` and doesn't build anything.
 
-### 1. Create the Cloudflare Pages project
+Already done: the Worker `aniketghosh-in` exists (first deployed from a
+laptop) at `https://aniketghosh-in.ghoshaniket1000.workers.dev`, and the
+domain's DNS is on Cloudflare.
 
-Create a **Direct Upload** project, not a Git-connected one (that would build
-and deploy a second time):
+### 1. API token for CI
 
-```bash
-npx wrangler login
-npx wrangler pages project create aniketghosh-in --production-branch=main
-```
+Cloudflare dashboard → My Profile → API Tokens → Create Token → **Edit
+Cloudflare Workers** template. Limit it to your account and to the
+`aniketghosh.in` zone. Your **Account ID** is on the Workers & Pages
+overview page, or run `npx wrangler whoami`.
 
-Or in the dashboard: Workers & Pages → Create → Pages → Upload assets.
+### 2. GitHub secrets
 
-### 2. Create an API token
+Repository → Settings → Secrets and variables → Actions → New repository
+secret:
 
-Cloudflare dashboard → My Profile → API Tokens → Create Token → Custom token,
-with one permission: **Account → Cloudflare Pages → Edit**, limited to your
-account. Your **Account ID** is shown on the Workers & Pages overview page.
+| Name                    | Value                 |
+| ----------------------- | --------------------- |
+| `CLOUDFLARE_API_TOKEN`  | the token from step 1 |
+| `CLOUDFLARE_ACCOUNT_ID` | your account ID       |
 
-### 3. Add secrets to GitHub
+The deploy job runs in a GitHub environment named `production`, created on
+the first deploy. You can add protection rules to it, such as a required
+reviewer.
 
-Repository → Settings → Secrets and variables → Actions:
+### 3. Custom domain
 
-| Name                       | Type     | Value                          |
-| -------------------------- | -------- | ------------------------------ |
-| `CLOUDFLARE_API_TOKEN`     | Secret   | the token from step 2          |
-| `CLOUDFLARE_ACCOUNT_ID`    | Secret   | your account ID                |
-| `CLOUDFLARE_PAGES_PROJECT` | Variable | `aniketghosh-in` (from step 1) |
-
-The deploy job runs in a GitHub environment named `production`, which is
-created on the first deploy. You can add protection rules to it, such as a
-required reviewer.
-
-### 4. Point the domain at Cloudflare
-
-An apex domain (`aniketghosh.in`) on Pages requires the domain's DNS to be
-hosted on Cloudflare:
-
-1. Cloudflare dashboard → Add a site → `aniketghosh.in`, Free plan.
-2. At your `.in` registrar, replace the nameservers with the two Cloudflare
-   gives you. Propagation can take up to 24 hours.
-3. Pages project → Custom domains → add `aniketghosh.in`. Cloudflare creates
-   the DNS record and the TLS certificate.
-4. Optional: add `www.aniketghosh.in` too, plus a redirect rule
+1. Cloudflare dashboard → DNS → Records for `aniketghosh.in`: delete any old
+   `A`, `AAAA` or `CNAME` records for `aniketghosh.in` and `www`. A custom
+   domain can't be attached while other records hold the name.
+2. Workers & Pages → `aniketghosh-in` → Settings → Domains & Routes → Add →
+   Custom domain → `aniketghosh.in`. Cloudflare creates the DNS record and
+   the TLS certificate.
+3. Optional: add `www.aniketghosh.in` the same way, then a redirect rule
    (Rules → Redirect Rules) sending `www` to the apex with a 301.
 
-### 5. Cloudflare settings to leave off
+### 4. Cloudflare settings to leave off
 
 These rewrite or inject scripts and would break the hash-based CSP:
 
 - Speed → Optimization → **Rocket Loader**: off.
-- Web Analytics **automatic setup** for the Pages project: off (use the
-  config flag above instead).
+- Web Analytics **automatic setup**: off (use the config flag above instead).
+
+### Deploying by hand
+
+```bash
+npm run build && npx wrangler@4.151.3 deploy
+```
+
+CI pins wrangler with `wranglerVersion` in `.github/workflows/ci.yml`;
+Dependabot doesn't update that string, so bump it occasionally.
 
 ## CI checks
 
@@ -281,7 +283,7 @@ These rewrite or inject scripts and would break the hash-based CSP:
 | CSP check       | `npm run check:csp`        | any page logs a CSP violation or JS error                |
 | Lighthouse      | `npm run check:lighthouse` | any category below 95 (median of 3 runs)                 |
 | Secret scan     | Gitleaks                   | a secret appears anywhere in git history                 |
-| Deploy (`main`) | `wrangler pages deploy`    | runs only if everything above passed                     |
+| Deploy (`main`) | `wrangler deploy`          | runs only if everything above passed                     |
 
 `npm run check` runs all of these except Gitleaks locally. To scan for
 secrets locally, install [Gitleaks](https://github.com/gitleaks/gitleaks)

@@ -1,0 +1,13 @@
+// Cloudflare Workers static-assets site (the successor to Cloudflare Pages).
+// Deployed by CI with `wrangler deploy` after `npm run build`.
+{
+  "name": "aniketghosh-in",
+  "compatibility_date": "2026-10-19",
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html with a 404 status for unknown paths.
+    "not_found_handling": "404-page",
+    // /blog/post -> /blog/post/ (matches Astro's directory output).
+    "html_handling": "auto-trailing-slash",
+  },
+}

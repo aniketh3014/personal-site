@@ -1,6 +1,6 @@
 ---
 title: "How this site is built and deployed"
-description: "The stack behind this site, Astro on Cloudflare Pages, and the CI pipeline that gates every deploy: link checks, a hash-based CSP, Lighthouse and secret scanning."
+description: "The stack behind this site, Astro on Cloudflare, and the CI pipeline that gates every deploy: link checks, a hash-based CSP, Lighthouse and secret scanning."
 date: 2026-10-21
 tags: [astro, cicd, cloudflare, github-actions]
 ---
@@ -23,8 +23,9 @@ change is allowed to ship.
 - **[Mermaid](https://mermaid.js.org/)** diagrams are rendered to SVG during
   the build with `rehype-mermaid` and a headless Chromium. Readers never
   download Mermaid itself.
-- **[Cloudflare Pages](https://pages.cloudflare.com/)** serves the files and
-  applies the security headers from a `_headers` file.
+- **[Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/)**
+  serves the files as static assets and applies the security headers from a
+  `_headers` file. No Worker code runs; it is purely static hosting.
 
 ## The pipeline
 
@@ -34,7 +35,7 @@ before deploying:
 ```mermaid
 flowchart LR
   accTitle: CI and deploy pipeline
-  accDescr: A pull request runs lint, build, link, CSP, Lighthouse and secret checks. A push to main runs the same checks, then deploys the checked build to Cloudflare Pages.
+  accDescr: A pull request runs lint, build, link, CSP, Lighthouse and secret checks. A push to main runs the same checks, then deploys the checked build to Cloudflare.
   PR[Pull request] --> L[Format and lint]
   L --> B[Build]
   B --> K[Broken links]
@@ -42,7 +43,7 @@ flowchart LR
   B --> H[Lighthouse]
   PR --> G[Gitleaks]
   K & C & H & G --> D{Push to main?}
-  D -- yes --> P[Deploy dist/ to Cloudflare Pages]
+  D -- yes --> P[Deploy dist/ to Cloudflare]
 ```
 
 | Check        | Tool                         | Fails when                                   |

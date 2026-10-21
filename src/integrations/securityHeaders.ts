@@ -11,7 +11,7 @@ type Options = {
   frameSrc?: string[];
 };
 
-// Cloudflare Pages ignores _headers lines longer than this.
+// Cloudflare ignores _headers lines longer than this.
 const MAX_LINE = 2000;
 
 async function htmlFiles(dir: string): Promise<string[]> {
@@ -43,7 +43,7 @@ async function inlineScriptHashes(dir: string): Promise<string[]> {
 }
 
 /**
- * Writes dist/_headers (Cloudflare Pages) after the build, with a CSP that
+ * Writes dist/_headers (Cloudflare static assets) after the build, with a CSP that
  * allows exactly the inline scripts the build produced. Inline styles stay
  * allowed: Shiki emits per-token style attributes, which hashes can't cover.
  */
