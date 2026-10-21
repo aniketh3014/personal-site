@@ -62,9 +62,7 @@ jobs:
         run: npm run check:csp
 
       - name: Lighthouse CI
-        run: |
-          export CHROME_PATH="$(node -e "import('playwright').then(p => console.log(p.chromium.executablePath()))")"
-          npm run check:lighthouse
+        run: npm run check:lighthouse
 
       - name: Upload Lighthouse reports
         if: ${{ !cancelled() }}

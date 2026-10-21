@@ -1,6 +1,7 @@
 # Grouped tech list shown on the About page, sorted by `order`.
 # No proficiency levels by design.
 # PLACEHOLDER: adjust the groups and items to what you actually use.
+# Quote any item that contains a comma, e.g. "AWS (EC2, S3)".
 - id: languages
   group: Languages
   order: 1
@@ -12,7 +13,7 @@
 - id: cloud
   group: Cloud
   order: 3
-  items: [AWS (EC2, ECS, Lambda, S3, RDS, SQS), Cloudflare]
+  items: ["AWS (EC2, ECS, Lambda, S3, RDS, SQS)", Cloudflare]
 - id: platform
   group: Platform and DevOps
   order: 4

@@ -1,5 +1,7 @@
 // Lighthouse CI against the built site. Run `npm run build` first.
-// Locally, point CHROME_PATH at a Chromium (see README).
+// Uses Playwright's Chromium unless CHROME_PATH is set.
+const { chromium } = require("playwright");
+
 module.exports = {
   ci: {
     collect: {
@@ -14,6 +16,7 @@ module.exports = {
       ],
       // 3 runs, asserted on the median: one cold-start run can't fail a PR.
       numberOfRuns: 3,
+      chromePath: process.env.CHROME_PATH || chromium.executablePath(),
       settings: {
         // Required inside CI containers; harmless locally.
         chromeFlags: "--no-sandbox --headless=new",
