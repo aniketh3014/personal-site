@@ -1,19 +1,34 @@
 # Grouped tech list shown on the About page and in the resume PDF, sorted by
-# `order`. No proficiency levels by design.
+# `order`. No proficiency levels by design. List only what a project, a role
+# or a repo can back up.
 # Quote any item that contains a comma, e.g. "AWS (EC2, S3)".
 - id: languages
   group: Languages and frameworks
   order: 1
-  items: [Go, TypeScript, JavaScript, Gin, Node.js, Next.js]
-- id: cloud
-  group: Cloud
+  items: [Go, TypeScript, JavaScript, SQL, Gin, Node.js, Next.js, React]
+- id: backend
+  group: APIs and messaging
   order: 2
-  items: ["AWS (EC2, S3, ECS, EKS, RDS)", Cloudflare]
+  items: [REST, gRPC, RabbitMQ, Redis]
 - id: data
   group: Databases and ORMs
   order: 3
   items: [PostgreSQL, MongoDB, Prisma, Bun]
-- id: devops
-  group: DevOps and CI/CD
+- id: cloud
+  group: Cloud
   order: 4
-  items: [Docker, Kubernetes, GitHub Actions]
+  items: ["AWS (EC2, S3, ECS, EKS, RDS)", Cloudflare]
+- id: devops
+  group: DevOps and infrastructure
+  order: 5
+  items:
+    [
+      Docker,
+      Kubernetes,
+      Docker Swarm,
+      GitHub Actions,
+      Nginx,
+      Caddy,
+      Linux,
+      Tailscale,
+    ]

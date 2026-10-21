@@ -9,7 +9,7 @@ results:
 repo_url: "https://github.com/aniketh3014/peerpair.dev"
 demo_url: "https://peerpair-dev.vercel.app"
 featured: true
-order: 2
+order: 4
 ---
 
 ## Architecture

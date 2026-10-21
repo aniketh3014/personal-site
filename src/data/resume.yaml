@@ -16,16 +16,21 @@ projects:
     tagline: "Peer-to-peer distributed file storage in Go"
     url: "https://github.com/aniketh3014/gstore"
     bullets:
-      - "Built a peer-to-peer file store in Go where every node is both client and server, with a pluggable TCP transport and handshake."
-      - "Implemented content-addressable storage, hashing keys with SHA-1 into sharded directory paths."
-      - "Replicated files by broadcasting gob-encoded messages and streaming data to all peers; nodes join the network by dialling bootstrap peers concurrently."
-  - name: PeerPair.dev
-    tagline: "Pair-programming rooms with live video"
-    url: "https://peerpair-dev.vercel.app"
+      - "Built a peer-to-peer file store where every node is both client and server, over a pluggable TCP transport with its own handshake and framing."
+      - "Implemented content-addressable storage (SHA-1 keys sharded into directory paths) and replication by streaming files to all peers after a gob-encoded announce."
+  - name: Go microservices
+    tagline: "One broker, four transports"
+    url: "https://github.com/aniketh3014/go-logger-email-microservice"
     bullets:
-      - "Built a Next.js and TypeScript app where developers create and join pair-programming rooms with live video."
-      - "Modelled users, OAuth accounts, sessions and rooms in PostgreSQL with Prisma; sign-in with Google and GitHub through NextAuth."
-      - "Integrated Stream's video SDK, issuing user tokens from server actions so API secrets never reach the browser."
+      - "Built five Go services behind a broker, communicating over REST, net/rpc, gRPC and a RabbitMQ topic exchange; PostgreSQL for auth, MongoDB for logs."
+      - "Deployed the same versioned images with Docker Compose, a Docker Swarm stack, and Kubernetes manifests with an ingress, behind Caddy."
+      - "Tested auth handlers against a mocked repository interface using httptest."
+  - name: Self-hosted infrastructure
+    tagline: "Hardened VPS with zero public ports"
+    url: "https://aniketghosh.in/projects/self-hosted-infra/"
+    bullets:
+      - "Operate Vaultwarden, Paperless-ngx, Joplin and Netdata on an Ubuntu VPS reachable only through a Tailscale (WireGuard) mesh, hardened with ufw and fail2ban."
+      - "Nginx terminates wildcard TLS issued through DNS-01 challenges, so services get valid certificates without exposing a single port."
 education:
   degree: "B.Tech in Computer Science and Engineering"
   school: "Siliguri Institute of Technology"
