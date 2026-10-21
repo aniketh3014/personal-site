@@ -17,10 +17,19 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
+import securityHeaders from "./src/integrations/securityHeaders";
 
 export default defineConfig({
   site: config.site.url,
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    securityHeaders({
+      cloudflareAnalytics:
+        !!config.analytics?.cloudflare?.enabled &&
+        !!config.analytics.cloudflare.token,
+    }),
+  ],
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
@@ -59,6 +68,10 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // Emit bundled scripts as files instead of inlining them. Inline module
+    // scripts make the client router inject a data: script, which the CSP
+    // blocks; this also keeps the list of CSP script hashes short.
+    build: { assetsInlineLimit: 0 },
   },
   fonts: [
     {

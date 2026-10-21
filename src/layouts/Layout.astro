@@ -113,6 +113,19 @@ const rssHref = getRelativeLocaleUrl(
       })();
     </script>
 
+    {
+      config.analytics.cloudflare.enabled && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({
+            token: config.analytics.cloudflare.token,
+          })}
+        />
+      )
+    }
+
     <ClientRouter />
   </head>
   <body
