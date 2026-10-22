@@ -98,6 +98,11 @@ jobs:
       - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Pin the scanner instead of the action's default (8.24.3), matching
+          # local scans. Note: a repo's very first push includes the root
+          # commit, which has no parent, so the action's "<first>^..<last>"
+          # range is invalid and the scan errors; later pushes are fine.
+          GITLEAKS_VERSION: "8.30.1"
           # PR comments would need pull-requests: write; the job summary is enough.
           GITLEAKS_ENABLE_COMMENTS: false
 
