@@ -7,28 +7,33 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-app: var(--font-google-sans-code);
+  /* Proportional body text; mono for headings, code, tags and navigation. */
+  --font-app: var(--font-ibm-plex-sans);
+  --font-mono: var(--font-google-sans-code);
 }
+
+/* Palette: cyan on GitHub-style neutrals, matching my GitHub profile.
+   Accent shades are chosen to keep text contrast above 4.5:1. */
 
 /* Light theme values */
 :root,
 [data-theme="light"] {
   --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
+  --foreground: #1f2328;
+  --accent: #0e7490;
   --accent-foreground: #ffffff;
-  --muted: #e6e6e6;
-  --muted-foreground: #6b7280;
-  --border: #ece9e9;
+  --muted: #e9eef0;
+  --muted-foreground: #57606a;
+  --border: #dde3e6;
 }
 
 /* Dark theme values */
 [data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --accent-foreground: #ffffff;
-  --muted: #343f60;
-  --muted-foreground: #afb9ca;
-  --border: #ab4b08;
+  --background: #0d1117;
+  --foreground: #e6edf3;
+  --accent: #22d3ee;
+  --accent-foreground: #0d1117;
+  --muted: #1c2430;
+  --muted-foreground: #9da7b3;
+  --border: #30363d;
 }

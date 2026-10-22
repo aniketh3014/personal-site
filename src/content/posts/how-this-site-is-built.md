@@ -1,6 +1,6 @@
 ---
 title: "How this site is built and deployed"
-description: "The stack behind this site, Astro on Cloudflare, and the CI pipeline that gates every deploy: link checks, a hash-based CSP, Lighthouse and secret scanning."
+description: "The stack behind this site, Astro on Cloudflare, and the CI pipeline that gates every deploy: link checks, a hash-based CSP, secret scanning, and Lighthouse on pull requests."
 date: 2026-10-21
 tags: [astro, cicd, cloudflare, github-actions]
 ---
@@ -16,8 +16,9 @@ change is allowed to ship.
   Markdown files in typed content collections, so a missing `title` or a
   malformed date fails the build instead of shipping a broken page.
 - **[AstroPaper](https://github.com/satnaing/astro-paper)** is the theme. I
-  kept its typography and layout and added projects, an About page driven by
-  YAML data, and a few blog features.
+  kept its layout, gave it my own palette and a proportional body font (IBM
+  Plex Sans, with mono for headings and code), and added projects, an About
+  page and resume driven by YAML data, and a few blog features.
 - **[Shiki](https://shiki.style/)** highlights code at build time, so readers
   download coloured HTML rather than a highlighting library.
 - **[Mermaid](https://mermaid.js.org/)** diagrams are rendered to SVG during
@@ -29,20 +30,21 @@ change is allowed to ship.
 
 ## The pipeline
 
-Every pull request runs the same checks, and a push to `main` runs them again
-before deploying:
+Every push and pull request runs the same core checks. Lighthouse, the
+slowest, runs on pull requests only, and a push to `main` deploys once the
+core checks pass:
 
 ```mermaid
 flowchart LR
   accTitle: CI and deploy pipeline
-  accDescr: A pull request runs lint, build, link, CSP, Lighthouse and secret checks. A push to main runs the same checks, then deploys the checked build to Cloudflare.
-  PR[Pull request] --> L[Format and lint]
+  accDescr: Every push or pull request runs lint, build, link, CSP and secret checks. Pull requests also run Lighthouse. A push to main deploys the checked build to Cloudflare once the core checks pass.
+  E[Push or pull request] --> L[Lint]
   L --> B[Build]
   B --> K[Broken links]
   B --> C[CSP check]
-  B --> H[Lighthouse]
-  PR --> G[Gitleaks]
-  K & C & H & G --> D{Push to main?}
+  E --> G[Gitleaks]
+  B -. "pull requests only" .-> H[Lighthouse]
+  K & C & G --> D{Push to main?}
   D -- yes --> P[Deploy dist/ to Cloudflare]
 ```
 
@@ -53,11 +55,13 @@ flowchart LR
 | Build        | `astro check && astro build` | a type error or invalid frontmatter          |
 | Broken links | linkinator                   | a link, image or `#fragment` doesn't resolve |
 | CSP          | Playwright                   | any page logs a CSP violation or JS error    |
-| Performance  | Lighthouse CI                | any category scores below 95                 |
+| Performance  | Lighthouse CI (PRs only)     | any category scores below 95                 |
 | Secrets      | Gitleaks                     | a credential appears anywhere in history     |
 
-The deploy job only runs after all of these pass, and it deploys the exact
-`dist/` folder that was checked rather than rebuilding it.
+The deploy job only runs after the core checks pass, and it deploys the
+exact `dist/` folder that was checked rather than rebuilding it. Lighthouse
+stays off the deploy path: it's the slowest check, and scores don't drift
+from one push to the next.
 
 ## A CSP that can't drift
 

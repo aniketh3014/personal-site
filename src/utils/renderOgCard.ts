@@ -108,7 +108,7 @@ export async function renderOgCard(card: OgCard, url: URL): Promise<Response> {
                                   props: {
                                     style: {
                                       fontSize: 28,
-                                      color: "#006cac",
+                                      color: "#0e7490",
                                       fontWeight: "bold",
                                       textTransform: "uppercase",
                                       letterSpacing: "2px",

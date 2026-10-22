@@ -3,7 +3,7 @@ title: "Self-hosted infrastructure with zero public ports"
 summary: "A hardened Ubuntu VPS running my own services behind a Tailscale mesh: nothing is reachable from the internet, yet everything has valid TLS."
 problem: "I wanted my own password manager, documents, notes and monitoring without trusting a third party, and without the attack surface of exposing self-hosted apps to the internet."
 stack:
-  [Ubuntu, Tailscale, Nginx, Docker, PostgreSQL, Redis, ufw, fail2ban, Netdata]
+  [Tailscale, Nginx, Docker, Ubuntu, PostgreSQL, Redis, ufw, fail2ban, Netdata]
 role: "Personal infrastructure: design and operations"
 results:
   - "Zero publicly reachable ports: every service is only reachable inside the WireGuard mesh."

@@ -16,6 +16,20 @@
   #main-content {
     @apply outline-accent outline-offset-1 focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
   }
+  /* Mono for headings, code and UI chrome; body text stays proportional. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  code,
+  kbd,
+  pre,
+  samp,
+  header {
+    font-family: var(--font-mono);
+  }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;

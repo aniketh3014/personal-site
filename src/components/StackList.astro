@@ -1,13 +1,29 @@
 ---
-type Props = { items: string[]; label?: string };
+type Props = {
+  items: string[];
+  label?: string;
+  /** Show at most this many, then "+N". Full list when omitted. */
+  max?: number;
+};
 
-const { items, label = "Tech stack" } = Astro.props;
+const { items, label = "Tech stack", max } = Astro.props;
+
+const shown = max ? items.slice(0, max) : items;
+const hidden = items.length - shown.length;
 ---
 
-<ul class="flex flex-wrap gap-2" aria-label={label}>
+<ul class="flex flex-wrap items-center gap-2 font-mono" aria-label={label}>
   {
-    items.map(item => (
+    shown.map(item => (
       <li class="border-border rounded border px-2 py-0.5 text-sm">{item}</li>
     ))
+  }
+  {
+    hidden > 0 && (
+      <li class="text-muted-foreground text-sm">
+        +{hidden}
+        <span class="sr-only"> more</span>
+      </li>
+    )
   }
 </ul>

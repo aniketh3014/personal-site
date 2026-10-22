@@ -19,6 +19,6 @@ const { variant: Heading = "h2", id, data } = Astro.props;
   </a>
   <p class="mt-1">{data.summary}</p>
   <div class="mt-2">
-    <StackList items={data.stack} />
+    <StackList items={data.stack} max={5} />
   </div>
 </li>
