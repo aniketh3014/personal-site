@@ -34,7 +34,7 @@
     "lodash.kebabcase": "^4.1.1",
     "rehype-callouts": "^2.2.0",
     "rehype-mermaid": "^3.0.0",
-    "satori": "^0.26.0",
+    "satori": "^0.62.0",
     "sharp": "^0.35.2",
     "slugify": "^1.6.9",
     "tailwindcss": "^4.3.2"
