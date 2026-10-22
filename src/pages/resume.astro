@@ -1,30 +1,99 @@
 ---
+import { getEntry } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import Experience from "@/components/Experience.astro";
+import TechList from "@/components/TechList.astro";
+import PersonJsonLd from "@/components/PersonJsonLd.astro";
 import config from "@/config";
 
-// Replace public/resume.pdf to update the download.
-const pdf = "/resume.pdf";
+// Same data as public/resume.pdf (scripts/build-resume.mjs).
+const entry = await getEntry("resume", "resume");
+if (!entry) throw new Error("Missing src/data/resume.yaml");
+const resume = entry.data;
+
+const bare = (url: string) =>
+  url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const contacts = [
+  { label: resume.email, href: `mailto:${resume.email}` },
+  { label: bare(resume.github), href: resume.github },
+  { label: bare(resume.linkedin), href: resume.linkedin },
+];
 ---
 
 <Layout
   title={`Resume | ${config.site.title}`}
-  description={`Resume of ${config.site.author}.`}
+  description={`Resume of ${config.site.author}: ${resume.headline}.`}
 >
+  <PersonJsonLd slot="head" />
   <Header />
   <Breadcrumb />
   <Main pageTitle="Resume" class="app-prose">
-    <p>
-      <a href={pdf} download="Aniket-Ghosh-Resume.pdf"
-        >Download my resume (PDF)</a
-      >
+    <p class="not-prose text-lg font-semibold">{resume.headline}</p>
+    <p class="not-prose text-muted-foreground mt-1">
+      {resume.location} ·{" "}
+      {
+        contacts.map(({ label, href }, i) => (
+          <>
+            <a href={href} class="hover:text-accent underline">
+              {label}
+            </a>
+            {i < contacts.length - 1 && " · "}
+          </>
+        ))
+      }
     </p>
+    <p class="not-prose mt-4">
+      <a
+        href="/resume.pdf"
+        download="Aniket-Ghosh-Resume.pdf"
+        class="border-border hover:text-accent inline-block rounded border px-3 py-1.5 font-medium"
+      >
+        Download PDF
+      </a>
+    </p>
+
+    <h2 id="summary">Summary</h2>
+    <p>{resume.summary}</p>
+
+    <h2 id="experience">Experience</h2>
+    <Experience />
+
+    <h2 id="projects">Projects</h2>
+    <ul class="not-prose space-y-5">
+      {
+        resume.projects.map(project => (
+          <li>
+            <h3 class="text-lg font-semibold">
+              <a
+                href={project.page ?? project.url}
+                class="hover:text-accent underline"
+              >
+                {project.name}
+              </a>
+              <span class="font-normal"> · {project.tagline}</span>
+            </h3>
+            <ul class="marker:text-accent mt-2 list-disc space-y-1 ps-5">
+              {project.bullets.map(bullet => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 id="skills">Skills</h2>
+    <TechList />
+
+    <h2 id="education">Education</h2>
     <p>
-      The short version: see <a href="/about/#experience">experience</a> and
-      <a href="/projects/">projects</a>.
+      <strong>{resume.education.degree}</strong>, {resume.education.school}
+      <br />
+      <span class="text-muted-foreground">{resume.education.dates}</span>
     </p>
   </Main>
   <Footer />

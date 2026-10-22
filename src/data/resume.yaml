@@ -15,12 +15,14 @@ projects:
   - name: gstore
     tagline: "Peer-to-peer distributed file storage in Go"
     url: "https://github.com/aniketh3014/gstore"
+    page: "/projects/gstore/"
     bullets:
       - "Built a peer-to-peer file store where every node is both client and server, over a pluggable TCP transport with its own handshake and framing."
       - "Implemented content-addressable storage (SHA-1 keys sharded into directory paths) and replication by streaming files to all peers after a gob-encoded announce."
   - name: Go microservices
     tagline: "One broker, four transports"
     url: "https://github.com/aniketh3014/go-logger-email-microservice"
+    page: "/projects/go-microservices/"
     bullets:
       - "Built five Go services behind a broker, communicating over REST, net/rpc, gRPC and a RabbitMQ topic exchange; PostgreSQL for auth, MongoDB for logs."
       - "Deployed the same versioned images with Docker Compose, a Docker Swarm stack, and Kubernetes manifests with an ingress, behind Caddy."
@@ -28,6 +30,7 @@ projects:
   - name: Self-hosted infrastructure
     tagline: "Hardened VPS with zero public ports"
     url: "https://aniketghosh.in/projects/self-hosted-infra/"
+    page: "/projects/self-hosted-infra/"
     bullets:
       - "Operate Vaultwarden, Paperless-ngx, Joplin and Netdata on an Ubuntu VPS reachable only through a Tailscale (WireGuard) mesh, hardened with ufw and fail2ban."
       - "Nginx terminates wildcard TLS issued through DNS-01 challenges, so services get valid certificates without exposing a single port."

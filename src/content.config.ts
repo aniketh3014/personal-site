@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { file, glob } from "astro/loaders";
+import { parse as parseYaml } from "yaml";
 import config from "@/config";
 
 export const BLOG_PATH = "src/content/posts";
@@ -92,4 +93,42 @@ const tech = defineCollection({
   }),
 });
 
-export const collections = { posts, pages, projects, experience, tech };
+// A single object (not a list), shared with scripts/build-resume.mjs.
+const resume = defineCollection({
+  loader: file("src/data/resume.yaml", {
+    parser: text => ({ resume: parseYaml(text) }),
+  }),
+  schema: z.object({
+    headline: z.string(),
+    location: z.string(),
+    email: z.email(),
+    website: z.url(),
+    github: z.url(),
+    linkedin: z.url(),
+    summary: z.string(),
+    projects: z.array(
+      z.object({
+        name: z.string(),
+        tagline: z.string(),
+        url: z.url(),
+        // Project page on this site, if there is one.
+        page: z.string().optional(),
+        bullets: z.array(z.string()).min(1),
+      })
+    ),
+    education: z.object({
+      degree: z.string(),
+      school: z.string(),
+      dates: z.string(),
+    }),
+  }),
+});
+
+export const collections = {
+  posts,
+  pages,
+  projects,
+  experience,
+  tech,
+  resume,
+};
