@@ -30,7 +30,11 @@ const links = [
 ].filter((link): link is { label: string; href: string } => !!link.href);
 ---
 
-<Layout title={`${title} | ${config.site.title}`} description={summary}>
+<Layout
+  title={`${title} | ${config.site.title}`}
+  description={summary}
+  ogImage={`/projects/${project.id}/index.png`}
+>
   <Header />
   <Breadcrumb />
   <main id="main-content" class="app-layout pb-4">

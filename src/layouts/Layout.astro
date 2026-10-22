@@ -79,8 +79,9 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <!-- Filled at runtime by theme.ts to match the current background colour -->
-    <meta name="theme-color" content="" />
+    <!-- Light-theme background by default; theme.ts updates it at runtime to
+         match the active theme (e.g. dark mode). -->
+    <meta name="theme-color" content="#fdfdfd" />
 
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
