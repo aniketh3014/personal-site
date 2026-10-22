@@ -19,6 +19,7 @@ projects:
     bullets:
       - "Built a peer-to-peer file store where every node is both client and server, over a pluggable TCP transport with its own handshake and framing."
       - "Implemented content-addressable storage (SHA-1 keys sharded into directory paths) and replication by streaming files to all peers after a gob-encoded announce."
+      - "Wrote a replication benchmark that caught a bug where only the first peer received data; after the fix, 100 MB reaches 4 peers in ~0.3 s (~1.3 GB/s aggregate, localhost)."
   - name: Go microservices
     tagline: "One broker, four transports"
     url: "https://github.com/aniketh3014/go-logger-email-microservice"

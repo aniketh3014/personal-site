@@ -61,6 +61,8 @@ const projects = defineCollection({
     stack: z.array(z.string()),
     role: z.string(),
     results: z.array(z.string()).default([]),
+    // Rendered after Results, before Links.
+    next: z.array(z.string()).default([]),
     repo_url: z.url().optional(),
     demo_url: z.url().optional(),
     // A blog post on this site ("/blog/slug/") or an external URL.

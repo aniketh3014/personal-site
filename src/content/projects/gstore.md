@@ -5,8 +5,14 @@ problem: "A single file server is a single point of failure. I wanted to underst
 stack: [Go, TCP, encoding/gob, crypto/aes]
 role: "Solo project: design and implementation"
 results:
-  - "Local multi-node network (`make run`) that stores a file on one node and replicates it to its peers."
-  - "Unit tests for the storage layer and the TCP transport."
+  - "100 MB replicated to 4 peers in about 0.3 s (≈1.3 GB/s aggregate) on localhost; to 1 peer in about 0.14 s (≈720 MB/s)."
+  - "A replication benchmark caught a bug where only the first peer ever received a file; fixed with a fresh reader per peer."
+  - "Unit tests for the storage layer and TCP transport, plus the benchmark as a Go test anyone can rerun."
+next:
+  - "Stream to peers in parallel instead of one after another, so total time stops growing with the peer count."
+  - "Wire the existing AES-CTR helpers into transfers, so files are encrypted before they leave a node."
+  - "Split large files into chunks, so replication can resume and run in parallel per chunk."
+  - "Replace bootstrap-only discovery with a DHT."
 repo_url: "https://github.com/aniketh3014/gstore"
 featured: true
 order: 1
@@ -50,10 +56,32 @@ requests from the network.
 - **Transport behind an interface.** Swapping TCP for another transport, or a
   fake one in tests, doesn't touch the file server.
 
-## What's next
+## Benchmark
 
-- Wire the existing AES-CTR helpers into transfers, so files are encrypted
-  before they leave a node.
-- Split large files into chunks, so replication can resume and run in
-  parallel.
-- Replace bootstrap-only discovery with a DHT.
+`replication_bench_test.go` starts a hub and N peers on localhost, stores a
+random file on the hub, and measures the time until every peer has the
+complete file on disk:
+
+```bash
+go test -run TestReplicationBenchmark -v
+```
+
+Time until all peers have the file (two runs, AMD Ryzen 5 5600H, storage on
+tmpfs, so this measures gstore's protocol and copy path rather than network
+or disk):
+
+| File   | 1 peer     | 2 peers    | 4 peers    |
+| ------ | ---------- | ---------- | ---------- |
+| 1 MB   | 6 ms       | 5 ms       | 5 ms       |
+| 10 MB  | 20 ms      | 21–31 ms   | 32–34 ms   |
+| 100 MB | 135–140 ms | 183–188 ms | 292–309 ms |
+
+At 100 MB that is about 720 MB/s to one peer and about 1.3 GB/s aggregate to
+four. Time grows with the peer count because the hub streams to peers one
+after another.
+
+**The bug it caught.** The first run showed only one peer ever finishing.
+`StoreData` streamed every peer from the same `bytes.Buffer`, and reading a
+buffer drains it, so peers after the first received zero bytes and waited
+forever. Each peer now gets its own `bytes.NewReader` over the same bytes,
+and copy errors are returned instead of swallowed.
