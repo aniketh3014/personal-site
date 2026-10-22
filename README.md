@@ -271,20 +271,21 @@ Dependabot doesn't update that string, so bump it occasionally.
 
 ## CI checks
 
-`.github/workflows/ci.yml` runs on every pull request and on pushes to
-`main`:
+`.github/workflows/ci.yml` runs on every pull request and every push to
+`main` (about 2–3 minutes):
 
-| Step            | Command                    | Fails when                                               |
-| --------------- | -------------------------- | -------------------------------------------------------- |
-| Formatting      | `npm run format:check`     | Prettier would change a file                             |
-| Lint            | `npm run lint`             | ESLint errors                                            |
-| Markdown lint   | `npm run lint:md`          | markdownlint errors (config: `.markdownlint-cli2.jsonc`) |
-| Build           | `npm run build`            | type errors, invalid frontmatter, failed diagram         |
-| Broken links    | `npm run check:links`      | a link, image or `#fragment` doesn't resolve             |
-| CSP check       | `npm run check:csp`        | any page logs a CSP violation or JS error                |
-| Lighthouse      | `npm run check:lighthouse` | any category below 95 (median of 3 runs)                 |
-| Secret scan     | Gitleaks                   | a secret appears anywhere in git history                 |
-| Deploy (`main`) | `wrangler deploy`          | runs only if everything above passed                     |
+| Step            | Command                           | Fails when                                        |
+| --------------- | --------------------------------- | ------------------------------------------------- |
+| Lint            | `format:check`, `lint`, `lint:md` | Prettier, ESLint or markdownlint complain         |
+| Build           | `npm run build`                   | type errors, invalid frontmatter, failed diagram  |
+| Broken links    | `npm run check:links`             | a link, image or `#fragment` doesn't resolve      |
+| CSP check       | `npm run check:csp`               | any page logs a CSP violation or JS error         |
+| Secret scan     | Gitleaks                          | a secret appears in the pushed commits            |
+| Lighthouse (PR) | `npm run check:lighthouse`        | any category below 95 (3 pages, median of 3 runs) |
+| Deploy (`main`) | `wrangler deploy`                 | runs only if the checks above passed              |
+
+Lighthouse is the slowest step, so it only runs on pull requests (including
+Dependabot's). Run it locally before a big layout or styling change.
 
 `npm run check` runs all of these except Gitleaks locally. To scan for
 secrets locally, install [Gitleaks](https://github.com/gitleaks/gitleaks)

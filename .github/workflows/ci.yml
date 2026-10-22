@@ -1,6 +1,6 @@
-# Pull requests: build + all checks.
-# Push to main: the same checks, then deploy the checked dist/ to Cloudflare
-# (Workers static assets, see wrangler.jsonc). A failing check blocks it.
+# Every run: lint, build, link check, CSP check, secret scan.
+# Pull requests also run Lighthouse. Pushes to main deploy the checked
+# dist/ to Cloudflare (see wrangler.jsonc); a failing check blocks it.
 name: CI
 
 on:
@@ -20,7 +20,7 @@ jobs:
   checks:
     name: Build and checks
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -39,18 +39,12 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      # Used to render Mermaid at build time, and by the CSP and Lighthouse checks.
+      # Renders Mermaid at build time; also used by the CSP and Lighthouse checks.
       - name: Install Chromium
         run: npx playwright install --with-deps --no-shell chromium
 
-      - name: Formatting (Prettier)
-        run: npm run format:check
-
-      - name: Lint (ESLint)
-        run: npm run lint
-
-      - name: Lint Markdown
-        run: npm run lint:md
+      - name: Lint (Prettier, ESLint, markdownlint)
+        run: npm run format:check && npm run lint && npm run lint:md
 
       - name: Build
         run: npm run build
@@ -61,17 +55,10 @@ jobs:
       - name: CSP check
         run: npm run check:csp
 
+      # The slowest check; scores don't drift push to push, so PRs only.
       - name: Lighthouse CI
+        if: github.event_name == 'pull_request'
         run: npm run check:lighthouse
-
-      - name: Upload Lighthouse reports
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: lighthouse-reports
-          path: .lighthouseci/
-          retention-days: 14
-          if-no-files-found: ignore
 
       - name: Upload site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
