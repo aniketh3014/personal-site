@@ -47,7 +47,7 @@
     "@types/lodash.kebabcase": "^4.1.9",
     "@typescript-eslint/parser": "^8.62.0",
     "eslint": "^10.6.0",
-    "eslint-plugin-astro": "^2.1.1",
+    "eslint-plugin-astro": "^3.2.1",
     "linkinator": "^8.1.0",
     "markdownlint-cli2": "^0.24.0",
     "playwright": "^1.64.0",
