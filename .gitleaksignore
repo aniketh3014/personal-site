@@ -1,0 +1,4 @@
+# Findings reviewed and accepted as non-secrets. Format: commit:file:rule:line
+# Cloudflare Web Analytics beacon token: public by design (it is served in
+# every page's HTML). Later commits mark the line with `gitleaks:allow`.
+df74f915d5daf767666937b83f9e230acb71f979:astro-paper.config.ts:generic-api-key:34
