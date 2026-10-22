@@ -121,6 +121,8 @@ const rssHref = getRelativeLocaleUrl(
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon={JSON.stringify({
             token: config.analytics.cloudflare.token,
+            // Count client-side (ClientRouter) navigations as page views.
+            spa: true,
           })}
         />
       )

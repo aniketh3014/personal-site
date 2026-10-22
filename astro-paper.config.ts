@@ -31,7 +31,7 @@ export default defineAstroPaperConfig({
   },
   analytics: {
     // Cloudflare Web Analytics. Off unless enabled AND a token is set.
-    cloudflare: { enabled: false, token: "" },
+    cloudflare: { enabled: true, token: "3b218c51af7844fe9f00d9a8d2fd4a12" },
   },
   socials: [
     { name: "github", url: "https://github.com/aniketh3014" },

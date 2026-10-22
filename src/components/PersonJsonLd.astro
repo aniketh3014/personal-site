@@ -6,11 +6,24 @@ const { site, home, socials } = config;
 const person = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${site.url}#person`,
   name: site.author,
   url: site.url,
   jobTitle: "Backend Engineer",
   description: home.headline,
   sameAs: socials.map(({ url }) => url).filter(url => url.startsWith("http")),
+};
+
+type Props = { website?: boolean };
+const { website = false } = Astro.props;
+
+// WebSite markup is what Google uses for the site name shown in results.
+const websiteData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: site.title,
+  url: site.url,
+  author: { "@id": `${site.url}#person` },
 };
 ---
 
@@ -19,3 +32,12 @@ const person = {
   is:inline
   set:html={JSON.stringify(person)}
 />
+{
+  website && (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(websiteData)}
+    />
+  )
+}

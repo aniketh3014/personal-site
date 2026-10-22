@@ -69,6 +69,21 @@ const browser = await chromium.launch({
   channel: process.env.PLAYWRIGHT_CHANNEL ?? "chromium",
 });
 const page = await browser.newPage();
+// Stand in for Cloudflare Web Analytics: no real beacons from CI, but the
+// page still loads a script from its origin and posts to its endpoint, so
+// the CSP's analytics allowances are exercised.
+await page.route("https://static.cloudflareinsights.com/**", route =>
+  route.fulfill({
+    contentType: "text/javascript",
+    body: 'fetch("https://cloudflareinsights.com/cdn-cgi/rum", { method: "POST", mode: "no-cors", body: "{}" });',
+  })
+);
+await page.route("https://cloudflareinsights.com/**", route =>
+  route.fulfill({
+    status: 204,
+    headers: { "access-control-allow-origin": "*" },
+  })
+);
 const problems = [];
 await page.addInitScript(() =>
   document.addEventListener("securitypolicyviolation", e =>

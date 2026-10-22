@@ -4,7 +4,7 @@ description: "A sample post showing every formatting feature this blog supports:
 date: 2026-10-01
 updated: 2026-10-10
 tags: [meta, example]
-draft: false
+draft: true
 ---
 
 This post is a reference for writing posts on this site. Copy it, delete what

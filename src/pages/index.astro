@@ -29,8 +29,10 @@ const featuredProjects = (await getProjects())
 const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
-<Layout>
-  <PersonJsonLd slot="head" />
+<Layout
+  title={`${config.site.title} · Backend Engineer (Go, distributed systems)`}
+>
+  <PersonJsonLd slot="head" website />
   <Header />
   <main
     id="main-content"

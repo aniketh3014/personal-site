@@ -3,6 +3,10 @@
 {
   "name": "aniketghosh-in",
   "compatibility_date": "2026-10-19",
+  // Serve only on aniketghosh.in (custom domains set in the dashboard): no
+  // duplicate copies on *.workers.dev or preview URLs for Google to index.
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./dist",
     // Serve dist/404.html with a 404 status for unknown paths.
