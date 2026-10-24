@@ -1,0 +1,157 @@
+---
+/*
+ * Decorative network beside the home hero: a hub sends a packet to each peer
+ * in turn (the way gstore replicates a file), and each peer pulses when its
+ * packet arrives. Inline SVG + CSS only, no JavaScript.
+ *
+ * Restraint rules: faint, outside the text column, wide screens only, slow
+ * staggered motion, and a still diagram under prefers-reduced-motion.
+ */
+const hub = { x: 60, y: 150 };
+const peers = [
+  { x: 150, y: 40 },
+  { x: 205, y: 95 },
+  { x: 215, y: 170 },
+  { x: 180, y: 240 },
+  { x: 110, y: 275 },
+  { x: 120, y: 85 },
+];
+// A few peer-to-peer links so it reads as a mesh, not a star chart.
+const meshLinks = [
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [3, 4],
+  [0, 5],
+];
+
+const CYCLE = 9; // seconds for one full round of sends
+const step = CYCLE / peers.length;
+---
+
+<svg
+  class="hero-graph text-accent pointer-events-none absolute top-1/2 left-full ms-6 hidden w-[230px] -translate-y-1/2 xl:block"
+  viewBox="0 0 240 300"
+  aria-hidden="true"
+  focusable="false"
+>
+  <g class="links">
+    {peers.map(p => <line x1={hub.x} y1={hub.y} x2={p.x} y2={p.y} />)}
+    {
+      meshLinks.map(([a, b]) => (
+        <line
+          class="mesh"
+          x1={peers[a].x}
+          y1={peers[a].y}
+          x2={peers[b].x}
+          y2={peers[b].y}
+        />
+      ))
+    }
+  </g>
+  <g class="packets">
+    {
+      peers.map((p, i) => (
+        <line
+          x1={hub.x}
+          y1={hub.y}
+          x2={p.x}
+          y2={p.y}
+          pathLength="100"
+          style={`--delay: ${(i * step).toFixed(2)}s; --cycle: ${CYCLE}s`}
+        />
+      ))
+    }
+  </g>
+  <g class="nodes">
+    <circle class="hub" cx={hub.x} cy={hub.y} r="9"></circle>
+    {
+      peers.map((p, i) => (
+        <circle
+          class="peer"
+          cx={p.x}
+          cy={p.y}
+          r="6"
+          style={`--delay: ${(i * step).toFixed(2)}s; --cycle: ${CYCLE}s`}
+        />
+      ))
+    }
+  </g>
+</svg>
+
+<style>
+  .hero-graph {
+    /* Fade out toward the text column. */
+    mask-image: linear-gradient(to right, transparent, black 15%);
+  }
+
+  .links line {
+    stroke: currentColor;
+    stroke-width: 1;
+    opacity: 0.22;
+  }
+
+  .links .mesh {
+    stroke-dasharray: 2 4;
+    opacity: 0.14;
+  }
+
+  .nodes circle {
+    fill: var(--background);
+    stroke: currentColor;
+    stroke-width: 1.5;
+    opacity: 0.45;
+  }
+
+  .nodes .hub {
+    opacity: 0.6;
+  }
+
+  /* A packet is a short dash travelling along the hub→peer link.
+     dashoffset 4 (start, hidden) → -100 (past the end, hidden). */
+  .packets line {
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 4 96;
+    stroke-dashoffset: 4;
+    opacity: 0.75;
+    animation: send var(--cycle) linear var(--delay) infinite;
+  }
+
+  @keyframes send {
+    0% {
+      stroke-dashoffset: 4;
+    }
+    22% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: -100;
+    }
+  }
+
+  /* The peer pulses as its packet arrives. */
+  .nodes .peer {
+    animation: receive var(--cycle) ease-out var(--delay) infinite;
+  }
+
+  @keyframes receive {
+    0%,
+    18%,
+    40%,
+    100% {
+      opacity: 0.45;
+    }
+    24% {
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets line,
+    .nodes .peer {
+      animation: none;
+    }
+  }
+</style>

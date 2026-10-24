@@ -80,16 +80,20 @@ export default defineConfig({
       cssVariable: "--font-google-sans-code",
       provider: fontProviders.google(),
       fallbacks: ["monospace"],
-      weights: [300, 400, 500, 600, 700],
+      // Two weights only (code 400, headings 700): every extra face is
+      // another request on content-heavy pages.
+      weights: [400, 700],
       styles: ["normal", "italic"],
-      formats: ["woff", "ttf"],
+      // woff2 for browsers (smallest); ttf for the OG image renderer (satori
+      // can't read woff2; see utils/getFontPathByWeight.ts).
+      formats: ["woff2", "ttf"],
     },
     {
       name: "IBM Plex Sans",
       cssVariable: "--font-ibm-plex-sans",
       provider: fontProviders.google(),
       fallbacks: ["sans-serif"],
-      weights: [400, 500, 600, 700],
+      weights: [400, 600],
       styles: ["normal", "italic"],
       formats: ["woff2"],
     },

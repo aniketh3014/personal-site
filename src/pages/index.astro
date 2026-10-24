@@ -8,6 +8,7 @@ import Footer from "@/components/Footer.astro";
 import PersonJsonLd from "@/components/PersonJsonLd.astro";
 import Card from "@/components/Card.astro";
 import ProjectCard from "@/components/ProjectCard.astro";
+import HeroGraph from "@/components/HeroGraph.astro";
 import { getProjects } from "@/utils/getProjects";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
@@ -44,7 +45,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout my-1"
   >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
+    <section id="hero" class="border-border relative border-b pt-8 pb-6">
+      <HeroGraph />
       <h1 class="my-4 text-3xl font-bold sm:my-8 sm:text-4xl">
         {home.headline}
       </h1>

@@ -48,10 +48,10 @@ const rssHref = getRelativeLocaleUrl(
       cssVariable="--font-ibm-plex-sans"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
-    <Font
-      cssVariable="--font-google-sans-code"
-      preload={[{ subset: "latin", weight: 700, style: "normal" }]}
-    />
+    <!-- Only the body font is preloaded: it renders the largest text on every
+         page. Preloading the heading font too competes for bandwidth on slow
+         connections and delays first render. -->
+    <Font cssVariable="--font-google-sans-code" />
 
     <!-- Primary meta -->
     <title>{title}</title>
